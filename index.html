@@ -87,6 +87,15 @@ fetch(API_URL + "?action=scan&id=" + id)
 
 
     if(data.statut === "ok"){
+        else if(data.statut === "deja"){
+
+    document.getElementById("result").innerHTML =
+    "🟥 DÉJÀ MANGÉ<br>" +
+    data.prenom + " " + data.nom;
+
+    document.getElementById("result").className = "erreur";
+
+}
 
 
         document.getElementById("result").innerHTML =
