@@ -86,40 +86,32 @@ fetch(API_URL + "?action=scan&id=" + id)
 .then(data => {
 
 
-    if(data.statut === "ok"){
-        else if(data.statut === "deja"){
+if (data.statut === "ok") {
 
     document.getElementById("result").innerHTML =
-    "🟥 DÉJÀ MANGÉ<br>" +
-    data.prenom + " " + data.nom;
+        "✅ Repas enregistré<br>" +
+        data.prenom + " " + data.nom;
+
+    document.getElementById("result").className = "ok";
+
+}
+else if (data.statut === "deja") {
+
+    document.getElementById("result").innerHTML =
+        "🟥 DÉJÀ MANGÉ<br>" +
+        data.prenom + " " + data.nom;
 
     document.getElementById("result").className = "erreur";
 
 }
+else if (data.statut === "inconnu") {
 
-
-        document.getElementById("result").innerHTML =
-        "✅ Repas enregistré<br>" +
-        data.prenom + " " + data.nom;
-
-
-        document.getElementById("result").className="ok";
-
-
-    }
-
-    else if(data.statut === "inconnu"){
-
-
-        document.getElementById("result").innerHTML =
+    document.getElementById("result").innerHTML =
         "❌ Élève inconnu";
 
+    document.getElementById("result").className = "erreur";
 
-        document.getElementById("result").className="erreur";
-
-
-    }
-
+}
 
 })
 
@@ -176,17 +168,15 @@ dejaScanne=false;
 
 
 const scanner = new Html5QrcodeScanner(
-
-"reader",
-
-{
-fps:10,
-qrbox:250
-}
-
+    "reader",
+    {
+        fps: 10,
+        qrbox: 250,
+        rememberLastUsedCamera: true,
+        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+    },
+    false
 );
-
-
 
 scanner.render(onScanSuccess);
 
