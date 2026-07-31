@@ -137,32 +137,22 @@ document.getElementById("result").innerHTML =
 
 function onScanSuccess(decodedText){
 
+    if(dejaScanne){
+        return;
+    }
 
-if(dejaScanne){
-    return;
-}
+    dejaScanne = true;
 
+    document.getElementById("result").innerHTML =
+    "⏳ Vérification...";
 
-dejaScanne = true;
+    envoyerScan(decodedText);
 
+    setTimeout(()=>{
 
+        dejaScanne=false;
 
-document.getElementById("result").innerHTML =
-"QR détecté : " + decodedText;
-
-
-
-envoyerScan(decodedText);
-
-
-
-setTimeout(()=>{
-
-dejaScanne=false;
-
-},3000);
-
-
+    },3000);
 
 }
 
