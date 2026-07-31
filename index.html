@@ -1,179 +1,31 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cantine Scolaire</title>
 
-<title>Cantine QR</title>
+    <link rel="stylesheet" href="style.css">
 
-<script src="https://unpkg.com/html5-qrcode"></script>
-
-
-<style>
-
-body {
-    font-family: Arial;
-    text-align: center;
-    background:#f5f5f5;
-}
-
-h1 {
-    color:#2E7D32;
-}
-
-#reader {
-    width:320px;
-    margin:auto;
-}
-
-#result {
-    margin-top:20px;
-    font-size:22px;
-    font-weight:bold;
-}
-
-
-.ok {
-    color:green;
-}
-
-
-.erreur {
-    color:red;
-}
-
-</style>
-
+    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
-
 
 <body>
 
+<div class="container">
 
-<h1>🍽️ Cantine Scolaire</h1>
+    <h1>🍽️ Cantine Scolaire</h1>
 
+    <div id="reader"></div>
 
-<div id="reader"></div>
+    <div id="result" class="message attente">
+        En attente du scan...
+    </div>
 
-
-<div id="result">
-En attente du scan...
 </div>
 
-
-
-<script>
-
-
-const API_URL = "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
-
-
-
-let dejaScanne = false;
-
-
-
-function envoyerScan(id){
-
-    const url = API_URL + "?action=scan&qr=" + encodeURIComponent(id);
-
-    fetch(url)
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        if(data.statut === "ok"){
-
-            document.getElementById("result").innerHTML =
-                "✅ REPAS ENREGISTRÉ<br><br>" +
-                data.prenom + " " + data.nom;
-
-            document.getElementById("result").className = "ok";
-
-        }
-        else if(data.statut === "deja"){
-
-            document.getElementById("result").innerHTML =
-                "🟥 DÉJÀ MANGÉ<br><br>" +
-                data.prenom + " " + data.nom;
-
-            document.getElementById("result").className = "erreur";
-
-        }
-        else if(data.statut === "inconnu"){
-
-            document.getElementById("result").innerHTML =
-                "❌ ÉLÈVE INCONNU";
-
-            document.getElementById("result").className = "erreur";
-
-        }
-        else{
-
-            document.getElementById("result").innerHTML =
-                "⚠️ Réponse inattendue";
-
-        }
-
-    })
-
-    .catch(error => {
-
-        document.getElementById("result").innerHTML =
-            "❌ Erreur API : " + error;
-
-        document.getElementById("result").className = "erreur";
-
-    });
-
-}
-
-
-
-
-
-function onScanSuccess(decodedText){
-
-    if(dejaScanne){
-        return;
-    }
-
-    dejaScanne = true;
-
-    document.getElementById("result").innerHTML =
-    "⏳ Vérification...";
-
-    envoyerScan(decodedText);
-
-    setTimeout(()=>{
-
-        dejaScanne=false;
-
-    },3000);
-
-}
-
-
-
-
-const scanner = new Html5QrcodeScanner(
-    "reader",
-    {
-        fps: 10,
-        qrbox: 250
-    },
-    false
-);
-
-scanner.render(onScanSuccess);
-
-
-
-</script>
-
+<script src="app.js"></script>
 
 </body>
-
 </html>
