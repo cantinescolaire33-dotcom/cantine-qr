@@ -76,58 +76,32 @@ let dejaScanne = false;
 
 function envoyerScan(id){
 
-
-fetch(
-    API_URL + "?action=scan&qr=" + encodeURIComponent(decodedText)
-)
-
-
-.then(response => response.json())
-
-
-.then(data => {
-
-
-if (data.statut === "ok") {
+    const url = API_URL + "?action=scan&qr=" + encodeURIComponent(id);
 
     document.getElementById("result").innerHTML =
-        "✅ Repas enregistré<br>" +
-        data.prenom + " " + data.nom;
+    "Connexion API...";
 
-    document.getElementById("result").className = "ok";
+    fetch(url)
 
-}
-else if (data.statut === "deja") {
+    .then(response => {
 
-    document.getElementById("result").innerHTML =
-        "🟥 DÉJÀ MANGÉ<br>" +
-        data.prenom + " " + data.nom;
+        return response.json();
 
-    document.getElementById("result").className = "erreur";
+    })
 
-}
-else if (data.statut === "inconnu") {
+    .then(data => {
 
-    document.getElementById("result").innerHTML =
-        "❌ Élève inconnu";
+        document.getElementById("result").innerHTML =
+        "Réponse API :<br>" + JSON.stringify(data);
 
-    document.getElementById("result").className = "erreur";
+    })
 
-}
+    .catch(error => {
 
-})
+        document.getElementById("result").innerHTML =
+        "Erreur API : " + error;
 
-
-.catch(error=>{
-
-
-document.getElementById("result").innerHTML =
-"❌ Erreur connexion API";
-
-
-});
-
-
+    });
 
 }
 
