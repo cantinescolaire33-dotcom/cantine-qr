@@ -78,28 +78,53 @@ function envoyerScan(id){
 
     const url = API_URL + "?action=scan&qr=" + encodeURIComponent(id);
 
-    document.getElementById("result").innerHTML =
-    "Connexion API...";
-
     fetch(url)
 
-    .then(response => {
-
-        return response.json();
-
-    })
+    .then(response => response.json())
 
     .then(data => {
 
-        document.getElementById("result").innerHTML =
-        "Réponse API :<br>" + JSON.stringify(data);
+        if(data.statut === "ok"){
+
+            document.getElementById("result").innerHTML =
+                "✅ REPAS ENREGISTRÉ<br><br>" +
+                data.prenom + " " + data.nom;
+
+            document.getElementById("result").className = "ok";
+
+        }
+        else if(data.statut === "deja"){
+
+            document.getElementById("result").innerHTML =
+                "🟥 DÉJÀ MANGÉ<br><br>" +
+                data.prenom + " " + data.nom;
+
+            document.getElementById("result").className = "erreur";
+
+        }
+        else if(data.statut === "inconnu"){
+
+            document.getElementById("result").innerHTML =
+                "❌ ÉLÈVE INCONNU";
+
+            document.getElementById("result").className = "erreur";
+
+        }
+        else{
+
+            document.getElementById("result").innerHTML =
+                "⚠️ Réponse inattendue";
+
+        }
 
     })
 
     .catch(error => {
 
         document.getElementById("result").innerHTML =
-        "Erreur API : " + error;
+            "❌ Erreur API : " + error;
+
+        document.getElementById("result").className = "erreur";
 
     });
 
