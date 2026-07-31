@@ -77,7 +77,9 @@ let dejaScanne = false;
 function envoyerScan(id){
 
 
-fetch(API_URL + "?action=scan&id=" + id)
+fetch(
+    API_URL + "?action=scan&qr=" + encodeURIComponent(decodedText)
+)
 
 
 .then(response => response.json())
