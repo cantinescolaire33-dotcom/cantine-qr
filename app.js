@@ -1,8 +1,12 @@
 const result = document.getElementById("result");
 const loading = document.getElementById("loading");
 
+const API_URL = "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
+
+
 let html5QrCode;
-let scanEnCours = false;
+let scanBloque = false;
+
 
 
 function afficherMessage(message, classe = "attente") {
@@ -13,73 +17,193 @@ function afficherMessage(message, classe = "attente") {
 }
 
 
-function demarrerScanner() {
+
+function envoyerScan(qrCode){
+
+
+    fetch(
+        API_URL +
+        "?action=scan&qr=" +
+        encodeURIComponent(qrCode)
+    )
+
+
+    .then(response => response.json())
+
+
+    .then(data => {
+
+
+        if(data.statut === "ok"){
+
+
+            afficherMessage(
+                "✅ REPAS ENREGISTRÉ<br><br>" +
+                data.prenom + " " + data.nom +
+                "<br>Classe : " + data.classe,
+                "ok"
+            );
+
+
+        }
+
+
+        else if(data.statut === "deja"){
+
+
+            afficherMessage(
+                "🟥 DÉJÀ MANGÉ<br><br>" +
+                data.prenom + " " + data.nom,
+                "erreur"
+            );
+
+
+        }
+
+
+        else{
+
+
+            afficherMessage(
+                "❌ ÉLÈVE INCONNU",
+                "erreur"
+            );
+
+
+        }
+
+
+    })
+
+
+    .catch(error => {
+
+
+        afficherMessage(
+            "❌ Erreur API",
+            "erreur"
+        );
+
+
+        console.error(error);
+
+
+    })
+
+    .finally(()=>{
+
+
+        setTimeout(()=>{
+
+
+            scanBloque = false;
+
+
+            afficherMessage(
+                "📷 Prêt pour le prochain élève",
+                "attente"
+            );
+
+
+            demarrerScanner();
+
+
+        },2000);
+
+
+    });
+
+
+}
+
+
+
+
+function demarrerScanner(){
+
 
     html5QrCode = new Html5Qrcode("reader");
+
 
 
     html5QrCode.start(
 
         {
-            facingMode: "environment"
+            facingMode:"environment"
         },
+
 
         {
-            fps: 10,
-            qrbox: 250
+            fps:10,
+            qrbox:250
         },
 
 
-        (decodedText) => {
+        (decodedText)=>{
 
 
-            if(scanEnCours){
+            if(scanBloque){
                 return;
             }
 
 
-            scanEnCours = true;
-
-
-            afficherMessage(
-                "📷 QR détecté<br><br>" + decodedText,
-                "info"
-            );
+            scanBloque = true;
 
 
             html5QrCode.stop()
-            .then(() => {
+            .then(()=>{
 
-                console.log("Scanner arrêté");
+
+                afficherMessage(
+                    "⏳ Vérification...",
+                    "info"
+                );
+
+
+                envoyerScan(decodedText);
+
 
             });
 
 
         },
 
-        (errorMessage) => {
+
+        (errorMessage)=>{
+
 
         }
 
+
     )
 
-    .then(() => {
 
-        loading.style.display = "none";
+    .then(()=>{
+
+
+        if(loading){
+            loading.style.display="none";
+        }
+
 
     })
 
-    .catch(err => {
+
+    .catch(err=>{
+
 
         afficherMessage(
             "❌ Erreur caméra : " + err,
             "erreur"
         );
 
+
     });
 
-}
 
+
+}
+    
 
 
 demarrerScanner();
