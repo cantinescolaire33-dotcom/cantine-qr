@@ -1,76 +1,85 @@
-let scanner;
 const result = document.getElementById("result");
+const loading = document.getElementById("loading");
+
+let html5QrCode;
+let scanEnCours = false;
+
 
 function afficherMessage(message, classe = "attente") {
+
     result.className = "message " + classe;
     result.innerHTML = message;
+
 }
 
-function onScanSuccess(decodedText) {
 
-    afficherMessage("⏳ Vérification...", "info");
+function demarrerScanner() {
 
-    fetch(
-        "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec?action=scan&qr=" +
-        encodeURIComponent(decodedText)
+    html5QrCode = new Html5Qrcode("reader");
+
+
+    html5QrCode.start(
+
+        {
+            facingMode: "environment"
+        },
+
+        {
+            fps: 10,
+            qrbox: 250
+        },
+
+
+        (decodedText) => {
+
+
+            if(scanEnCours){
+                return;
+            }
+
+
+            scanEnCours = true;
+
+
+            afficherMessage(
+                "📷 QR détecté<br><br>" + decodedText,
+                "info"
+            );
+
+
+            html5QrCode.stop()
+            .then(() => {
+
+                console.log("Scanner arrêté");
+
+            });
+
+
+        },
+
+        (errorMessage) => {
+
+        }
+
     )
 
-    .then(response => response.json())
+    .then(() => {
 
-    .then(data => {
-
-        if(data.statut === "ok"){
-
-            afficherMessage(
-                "✅ REPAS ENREGISTRÉ<br><br>" +
-                data.prenom + " " + data.nom +
-                "<br>Classe : " + data.classe,
-                "ok"
-            );
-
-        }
-
-        else if(data.statut === "deja"){
-
-            afficherMessage(
-                "🟥 DÉJÀ MANGÉ<br><br>" +
-                data.prenom + " " + data.nom,
-                "erreur"
-            );
-
-        }
-
-        else{
-
-            afficherMessage(
-                "❌ ÉLÈVE INCONNU",
-                "erreur"
-            );
-
-        }
+        loading.style.display = "none";
 
     })
 
     .catch(err => {
 
         afficherMessage(
-            "❌ Erreur API",
+            "❌ Erreur caméra : " + err,
             "erreur"
         );
-       
-        console.error(err);
 
     });
 
 }
 
-scanner = new Html5QrcodeScanner(
-    "reader",
-    {
-        fps: 10,
-        qrbox: 250
-    },
-    false
-);
 
-scanner.render(onScanSuccess);
+
+demarrerScanner();
