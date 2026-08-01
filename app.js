@@ -7,10 +7,59 @@ function afficherMessage(message, classe = "attente") {
 
 function onScanSuccess(decodedText) {
 
-    afficherMessage(
-        "📷 QR détecté<br><br><strong>" + decodedText + "</strong>",
-        "info"
-    );
+    afficherMessage("⏳ Vérification...", "info");
+
+    fetch(
+        "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec?action=scan&qr=" +
+        encodeURIComponent(decodedText)
+    )
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if(data.statut === "ok"){
+
+            afficherMessage(
+                "✅ REPAS ENREGISTRÉ<br><br>" +
+                data.prenom + " " + data.nom +
+                "<br>Classe : " + data.classe,
+                "ok"
+            );
+
+        }
+
+        else if(data.statut === "deja"){
+
+            afficherMessage(
+                "🟥 DÉJÀ MANGÉ<br><br>" +
+                data.prenom + " " + data.nom,
+                "erreur"
+            );
+
+        }
+
+        else{
+
+            afficherMessage(
+                "❌ ÉLÈVE INCONNU",
+                "erreur"
+            );
+
+        }
+
+    })
+
+    .catch(err => {
+
+        afficherMessage(
+            "❌ Erreur API",
+            "erreur"
+        );
+
+        console.error(err);
+
+    });
 
 }
 
