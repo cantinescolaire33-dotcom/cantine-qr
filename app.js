@@ -1,3 +1,4 @@
+let scanner;
 const result = document.getElementById("result");
 
 function afficherMessage(message, classe = "attente") {
@@ -56,14 +57,14 @@ function onScanSuccess(decodedText) {
             "❌ Erreur API",
             "erreur"
         );
-
+       
         console.error(err);
 
     });
 
 }
 
-const scanner = new Html5QrcodeScanner(
+scanner = new Html5QrcodeScanner(
     "reader",
     {
         fps: 10,
