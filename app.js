@@ -126,17 +126,20 @@ function demarrerScanner(){
 
 
 
-    html5QrCode.start(
+   html5QrCode.start(
 
-        {
-            facingMode:"environment"
-        },
+    {
+        facingMode: {
+            exact: "environment"
+        }
+    },
 
 
-        {
-            fps:10,
-            qrbox:250
-        },
+    {
+        fps:10,
+        qrbox:250,
+        aspectRatio: 1.7777778
+    },
 
 
         (decodedText)=>{
