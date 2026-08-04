@@ -17,23 +17,25 @@ async function trouverCamera() {
 
     // Cherche une caméra arrière
 
-    const cameraArriere = cameras.find(camera =>
-        camera.label.toLowerCase().includes("back")
-    );
+    const camerasArriere = cameras.filter(camera =>
+    camera.label.toLowerCase().includes("back")
+);
 
 
-    if (cameraArriere) {
+if (camerasArriere.length > 1) {
 
-        cameraId = cameraArriere.id;
+    // On prend la dernière caméra arrière disponible
+    cameraId = camerasArriere[camerasArriere.length - 1].id;
 
-    } else {
+}
+else if (camerasArriere.length === 1) {
 
-        // Si aucune caméra arrière trouvée,
-        // prend la première caméra disponible
+    cameraId = camerasArriere[0].id;
 
-        cameraId = cameras[cameras.length - 1].id;
+}
 
-    }
+
+    
 
 
     console.log("Caméra utilisée :", cameraId);
