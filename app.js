@@ -1,231 +1,96 @@
-const result = document.getElementById("result");
-const loading = document.getElementById("loading");
-
-const API_URL = "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
+let scanActif = false;
 
 
-let html5QrCode;
-let scanBloque = false;
+async function traiterScan(qrCode) {
+
+
+    if(scanActif){
+        return;
+    }
+
+
+    scanActif = true;
+
+
+    afficherVerification();
+
+
+    const data = await envoyerScan(qrCode);
 
 
 
-function afficherMessage(message, classe = "attente") {
-
-    result.className = "message " + classe;
-    result.innerHTML = message;
-
-}
+    if(data.statut === "ok"){
 
 
-
-function envoyerScan(qrCode){
-
-
-    fetch(
-        API_URL +
-        "?action=scan&qr=" +
-        encodeURIComponent(qrCode)
-    )
+        afficherSucces(
+            data.prenom,
+            data.nom,
+            data.classe
+        );
 
 
-    .then(response => response.json())
+    }
+
+    else if(data.statut === "deja"){
 
 
-    .then(data => {
+        afficherDeja(
+            data.prenom,
+            data.nom
+        );
 
 
-        if(data.statut === "ok"){
+    }
+
+    else if(data.statut === "inconnu"){
 
 
-            afficherMessage(
-                "✅ REPAS ENREGISTRÉ<br><br>" +
-                data.prenom + " " + data.nom +
-                "<br>Classe : " + data.classe,
-                "ok"
-            );
+        afficherInconnu();
 
 
-        }
+    }
 
-
-        else if(data.statut === "deja"){
-
-
-            afficherMessage(
-                "🟥 DÉJÀ MANGÉ<br><br>" +
-                data.prenom + " " + data.nom,
-                "erreur"
-            );
-
-
-        }
-
-
-        else{
-
-
-            afficherMessage(
-                "❌ ÉLÈVE INCONNU",
-                "erreur"
-            );
-
-
-        }
-
-
-    })
-
-
-    .catch(error => {
+    else {
 
 
         afficherMessage(
-            "❌ Erreur API",
+            "❌ Erreur de connexion API",
             "erreur"
         );
 
 
-        console.error(error);
+    }
 
 
-    })
 
-    .finally(()=>{
-
-
-        setTimeout(()=>{
+    setTimeout(()=>{
 
 
-            scanBloque = false;
+        afficherAttente();
 
 
-            afficherMessage(
-                "📷 Prêt pour le prochain élève",
-                "attente"
-            );
-
-    Html5Qrcode.getCameras()
-.then(cameras => {
-
-    let texte = "Caméras détectées :<br><br>";
-
-    cameras.forEach((camera, index) => {
-
-        texte += index + " : " + camera.label + "<br>";
-
-    });
-
-    document.getElementById("result").innerHTML = texte;
-
-})
-.catch(err => {
-
-    document.getElementById("result").innerHTML =
-        "Erreur : " + err;
-
-});
-            demarrerScanner();
+        scanActif = false;
 
 
-        },2000);
+        demarrerScanner(traiterScan);
 
 
-    });
+
+    }, CONFIG.RESCAN_DELAY);
+
 
 
 }
 
 
 
-
-function demarrerScanner(){
-
-
-    html5QrCode = new Html5Qrcode("reader");
+window.onload = ()=>{
 
 
-
-   html5QrCode.start(
-
-    {
-        facingMode: {
-            exact: "environment"
-        }
-    },
+    afficherAttente();
 
 
-    {
-        fps:10,
-        qrbox:250,
-        aspectRatio: 1.7777778
-    },
+    demarrerScanner(traiterScan);
 
 
-        (decodedText)=>{
-
-
-            if(scanBloque){
-                return;
-            }
-
-
-            scanBloque = true;
-
-
-            html5QrCode.stop()
-            .then(()=>{
-
-
-                afficherMessage(
-                    "⏳ Vérification...",
-                    "info"
-                );
-
-
-                envoyerScan(decodedText);
-
-
-            });
-
-
-        },
-
-
-        (errorMessage)=>{
-
-
-        }
-
-
-    )
-
-
-    .then(()=>{
-
-
-        if(loading){
-            loading.style.display="none";
-        }
-
-
-    })
-
-
-    .catch(err=>{
-
-
-        afficherMessage(
-            "❌ Erreur caméra : " + err,
-            "erreur"
-        );
-
-
-    });
-
-
-
-}
-    
-
-
-demarrerScanner();
+};
