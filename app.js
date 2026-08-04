@@ -107,15 +107,22 @@ function envoyerScan(qrCode){
     Html5Qrcode.getCameras()
 .then(cameras => {
 
-    console.log("Caméras trouvées :", cameras);
+    let texte = "Caméras détectées :<br><br>";
 
     cameras.forEach((camera, index) => {
-        console.log(index, camera.id, camera.label);
+
+        texte += index + " : " + camera.label + "<br>";
+
     });
+
+    document.getElementById("result").innerHTML = texte;
 
 })
 .catch(err => {
-    console.error(err);
+
+    document.getElementById("result").innerHTML =
+        "Erreur : " + err;
+
 });
             demarrerScanner();
 
