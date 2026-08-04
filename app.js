@@ -20,6 +20,7 @@ async function traiterScan(qrCode) {
 
 
     if(data.statut === "ok"){
+        jouerSucces();
 
 
         afficherSucces(
@@ -32,6 +33,7 @@ async function traiterScan(qrCode) {
     }
 
     else if(data.statut === "deja"){
+        jouerErreur();
 
 
         afficherDeja(
