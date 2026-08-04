@@ -123,6 +123,9 @@ function demarrerScanner(){
 
 
     html5QrCode = new Html5Qrcode("reader");
+    Html5Qrcode.getCameras().then(cameras => {
+    console.log(cameras);
+});
 
 
 
