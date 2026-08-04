@@ -104,7 +104,19 @@ function envoyerScan(qrCode){
                 "attente"
             );
 
+    Html5Qrcode.getCameras()
+.then(cameras => {
 
+    console.log("Caméras trouvées :", cameras);
+
+    cameras.forEach((camera, index) => {
+        console.log(index, camera.id, camera.label);
+    });
+
+})
+.catch(err => {
+    console.error(err);
+});
             demarrerScanner();
 
 
