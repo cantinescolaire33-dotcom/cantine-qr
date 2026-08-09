@@ -17,6 +17,7 @@ async function traiterScan(qrCode) {
         console.log("Réponse API :", data);
 
         if (data.statut === "ok") {
+            jouerSucces();
 
             afficherSucces(
                 data.prenom,
