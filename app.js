@@ -1,98 +1,83 @@
 let scanActif = false;
 
-
 async function traiterScan(qrCode) {
 
-
-    if(scanActif){
+    if (scanActif) {
         return;
     }
 
-
     scanActif = true;
-
 
     afficherVerification();
 
+    try {
 
-    const data = await envoyerScan(qrCode);
+        const data = await envoyerScan(qrCode);
 
+        console.log("Réponse API :", data);
 
+        if (data.statut === "ok") {
 
-    if(data.statut === "ok"){
-        jouerSucces();
+            afficherSucces(
+                data.prenom,
+                data.nom,
+                data.classe
+            );
 
+        }
 
-        afficherSucces(
-            data.prenom,
-            data.nom,
-            data.classe
-        );
+        else if (data.statut === "deja") {
 
+            afficherDeja(
+                data.prenom,
+                data.nom
+            );
 
-    }
+        }
 
-    else if(data.statut === "deja"){
-        jouerErreur();
+        else if (data.statut === "inconnu") {
 
+            afficherInconnu();
 
-        afficherDeja(
-            data.prenom,
-            data.nom
-        );
+        }
 
+        else {
 
-    }
+            afficherMessage(
+                "❌ Erreur API",
+                "erreur"
+            );
 
-    else if(data.statut === "inconnu"){
+        }
 
+    } catch (error) {
 
-        afficherInconnu();
-
-
-    }
-
-    else {
-
+        console.error("Erreur :", error);
 
         afficherMessage(
-            "❌ Erreur de connexion API",
+            "❌ Erreur de connexion",
             "erreur"
         );
 
-
     }
 
-
-
-    setTimeout(()=>{
-
-
-        afficherAttente();
-
+    setTimeout(async () => {
 
         scanActif = false;
 
+        afficherAttente();
 
-        demarrerScanner(traiterScan);
-
-
+        await demarrerScanner(traiterScan);
 
     }, CONFIG.RESCAN_DELAY);
-
-
 
 }
 
 
-
-window.onload = ()=>{
-
+window.onload = function () {
 
     afficherAttente();
 
-
     demarrerScanner(traiterScan);
-
 
 };
