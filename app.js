@@ -1,3 +1,19 @@
+const boutonSon = document.getElementById("activerSon");
+
+if (boutonSon) {
+
+    boutonSon.addEventListener("click", function() {
+
+        if (activerAudio()) {
+
+            boutonSon.innerHTML = "🔊 Son activé";
+            boutonSon.disabled = true;
+
+        }
+
+    });
+
+}
 let scanActif = false;
 
 async function traiterScan(qrCode) {
