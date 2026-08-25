@@ -1,50 +1,61 @@
 let audioContext = null;
 
-function initialiserSon() {
+function activerAudio() {
 
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    try {
 
-    if (audioContext.state === "suspended") {
+        audioContext = new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
         audioContext.resume();
+
+        console.log("Audio activé");
+
+        return true;
+
+    } catch (error) {
+
+        console.error("Impossible d'activer le son :", error);
+
+        return false;
+
     }
+
 }
 
 
 function jouerBip(frequence, duree) {
 
-    try {
-
-        initialiserSon();
-
-        const oscillateur = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        oscillateur.frequency.value = frequence;
-        oscillateur.type = "sine";
-
-        gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-
-        oscillateur.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillateur.start();
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            audioContext.currentTime + duree
-        );
-
-        oscillateur.stop(
-            audioContext.currentTime + duree
-        );
-
-    } catch (error) {
-
-        console.log("Son indisponible :", error);
-
+    if (!audioContext) {
+        return;
     }
+
+    const oscillateur = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillateur.type = "sine";
+    oscillateur.frequency.value = frequence;
+
+    gain.gain.setValueAtTime(
+        0.15,
+        audioContext.currentTime
+    );
+
+    oscillateur.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillateur.start();
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + duree
+    );
+
+    oscillateur.stop(
+        audioContext.currentTime + duree
+    );
 
 }
 
