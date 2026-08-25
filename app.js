@@ -18,26 +18,22 @@ async function traiterScan(qrCode) {
 
         if (data.statut === "ok") {
 
-    jouerSucces();
+            afficherSucces(
+                data.prenom,
+                data.nom,
+                data.classe
+            );
 
-    afficherSucces(
-        data.prenom,
-        data.nom,
-        data.classe
-    );
-
-}
+        }
 
         else if (data.statut === "deja") {
 
-    jouerErreur();
+            afficherDeja(
+                data.prenom,
+                data.nom
+            );
 
-    afficherDeja(
-        data.prenom,
-        data.nom
-    );
-
-}
+        }
 
         else if (data.statut === "inconnu") {
 
