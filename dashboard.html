@@ -114,6 +114,7 @@
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
 
+
 function chargerDashboard() {
 
     fetch(API_URL + "?action=dashboard")
@@ -125,9 +126,15 @@ function chargerDashboard() {
             if (data.statut !== "ok") {
 
                 console.error("Erreur API :", data);
+
                 return;
 
             }
+
+
+            // -----------------------------
+            // Les 4 statistiques
+            // -----------------------------
 
             document.getElementById("totalEleves").textContent =
                 data.totalEleves;
@@ -141,18 +148,66 @@ function chargerDashboard() {
             document.getElementById("participation").textContent =
                 data.participation + "%";
 
+
+            // -----------------------------
+            // Derniers repas
+            // -----------------------------
+
+            const liste =
+                document.getElementById("listeRepas");
+
+            liste.innerHTML = "";
+
+
+            if (!data.derniersRepas ||
+                data.derniersRepas.length === 0) {
+
+                liste.innerHTML = `
+                    <tr>
+                        <td colspan="4">
+                            Aucun repas enregistré
+                        </td>
+                    </tr>
+                `;
+
+            } else {
+
+                data.derniersRepas.forEach(repas => {
+
+                    const ligne =
+                        document.createElement("tr");
+
+
+                    ligne.innerHTML = `
+                        <td>${repas.heure}</td>
+                        <td>${repas.id}</td>
+                        <td>${repas.prenom} ${repas.nom}</td>
+                        <td>${repas.classe}</td>
+                    `;
+
+
+                    liste.appendChild(ligne);
+
+                });
+
+            }
+
         })
+
 
         .catch(error => {
 
-            console.error("Erreur connexion :", error);
+            console.error(
+                "Erreur connexion :",
+                error
+            );
 
         });
 
 }
 
 
-// Charger automatiquement le tableau de bord
+// Charger le dashboard
 chargerDashboard();
 
 </script>
