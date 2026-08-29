@@ -22,6 +22,18 @@
     <h1>🍽️ Cantine Scolaire</h1>
 
     <h2>📊 Tableau de bord</h2>
+    <div class="date-selector">
+
+    <label for="dateChoisie">
+        📅 Date du repas
+    </label>
+
+    <input
+        type="date"
+        id="dateChoisie"
+    >
+
+</div>
 
 
     <div class="dashboard">
@@ -117,7 +129,14 @@ const API_URL =
 
 function chargerDashboard() {
 
-    fetch(API_URL + "?action=dashboard")
+    const date =
+        document.getElementById("dateChoisie").value;
+
+    fetch(
+        API_URL +
+        "?action=dashboard&date=" +
+        encodeURIComponent(date)
+    )
 
         .then(response => response.json())
 
@@ -132,10 +151,6 @@ function chargerDashboard() {
             }
 
 
-            // -----------------------------
-            // Les 4 statistiques
-            // -----------------------------
-
             document.getElementById("totalEleves").textContent =
                 data.totalEleves;
 
@@ -148,10 +163,6 @@ function chargerDashboard() {
             document.getElementById("participation").textContent =
                 data.participation + "%";
 
-
-            // -----------------------------
-            // Derniers repas
-            // -----------------------------
 
             const liste =
                 document.getElementById("listeRepas");
@@ -177,14 +188,12 @@ function chargerDashboard() {
                     const ligne =
                         document.createElement("tr");
 
-
                     ligne.innerHTML = `
                         <td>${repas.heure}</td>
                         <td>${repas.id}</td>
                         <td>${repas.prenom} ${repas.nom}</td>
                         <td>${repas.classe}</td>
                     `;
-
 
                     liste.appendChild(ligne);
 
@@ -193,7 +202,6 @@ function chargerDashboard() {
             }
 
         })
-
 
         .catch(error => {
 
@@ -206,8 +214,19 @@ function chargerDashboard() {
 
 }
 
-
 // Charger le dashboard
+const dateChoisie =
+    document.getElementById("dateChoisie");
+
+const aujourdHui =
+    new Date().toISOString().split("T")[0];
+
+dateChoisie.value = aujourdHui;
+
+dateChoisie.addEventListener(
+    "change",
+    chargerDashboard
+);
 chargerDashboard();
 
 </script>
