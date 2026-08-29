@@ -86,7 +86,53 @@
 
 
 </div>
+<script>
 
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
+
+function chargerDashboard() {
+
+    fetch(API_URL + "?action=dashboard")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if (data.statut !== "ok") {
+
+                console.error("Erreur API :", data);
+                return;
+
+            }
+
+            document.getElementById("totalEleves").textContent =
+                data.totalEleves;
+
+            document.getElementById("repasPris").textContent =
+                data.repasPris;
+
+            document.getElementById("nonPasses").textContent =
+                data.nonPasses;
+
+            document.getElementById("participation").textContent =
+                data.participation + "%";
+
+        })
+
+        .catch(error => {
+
+            console.error("Erreur connexion :", error);
+
+        });
+
+}
+
+
+// Charger automatiquement le tableau de bord
+chargerDashboard();
+
+</script>
 </body>
 
 </html>
