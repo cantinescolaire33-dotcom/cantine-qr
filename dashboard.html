@@ -33,6 +33,12 @@
         id="dateChoisie"
     >
 
+    <button
+        id="btnActualiser"
+        type="button">
+        🔄 Actualiser
+    </button>
+
 </div>
 
 
@@ -301,7 +307,16 @@ dateChoisie.addEventListener(
     "change",
     chargerDashboard
 );
+document.getElementById("btnActualiser")
+    .addEventListener(
+        "click",
+        chargerDashboard
+    );
 chargerDashboard();
+    setInterval(
+    chargerDashboard,
+    10000
+);
 
 </script>
 </body>
