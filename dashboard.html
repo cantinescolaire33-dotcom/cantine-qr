@@ -249,7 +249,7 @@ function afficherRecherche() {
 
             ligne.innerHTML = `
                 <td>${eleve.heure}</td>
-                <td>${eleve.id}</td>
+                <td>${String(eleve.id).padStart(4, "0")}</td>
                 <td>${eleve.prenom} ${eleve.nom}</td>
                 <td>${eleve.classe}</td>
             `;
