@@ -94,6 +94,26 @@
     </div>
 
 
+    <div class="recherche-eleve">
+
+    <label for="recherche">
+        🔎 Rechercher un élève
+    </label>
+
+    <input
+        type="text"
+        id="recherche"
+        placeholder="Nom, prénom ou ID..."
+        autocomplete="off"
+    >
+
+    <button
+        id="btnEffacerRecherche"
+        type="button">
+        ✖ Effacer
+    </button>
+
+</div>
     <h2>🟢 Élèves ayant mangé</h2>
 
 <div id="elevesAyantMange">
@@ -162,8 +182,137 @@
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
+    let derniereDonneeDashboard = null;
+
+function afficherRecherche() {
+
+    if (!derniereDonneeDashboard) {
+        return;
+    }
+
+    const recherche =
+        document.getElementById("recherche")
+            .value
+            .trim()
+            .toLowerCase();
 
 
+    const listeAyantMange =
+        document.getElementById("listeAyantMange");
+
+    const listeNonPasses =
+        document.getElementById("listeNonPasses");
+
+
+    listeAyantMange.innerHTML = "";
+    listeNonPasses.innerHTML = "";
+
+
+    // --------------------------------
+    // Élèves ayant mangé
+    // --------------------------------
+
+    const ayantMange =
+        derniereDonneeDashboard.elevesAyantMange
+        .filter(eleve => {
+
+            const texte = (
+
+                String(eleve.id) + " " +
+                eleve.nom + " " +
+                eleve.prenom + " " +
+                eleve.classe
+
+            ).toLowerCase();
+
+            return texte.includes(recherche);
+
+        });
+
+
+    if (ayantMange.length === 0) {
+
+        listeAyantMange.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    Aucun résultat
+                </td>
+            </tr>
+        `;
+
+    } else {
+
+        ayantMange.forEach(eleve => {
+
+            const ligne =
+                document.createElement("tr");
+
+            ligne.innerHTML = `
+                <td>${eleve.heure}</td>
+                <td>${eleve.id}</td>
+                <td>${eleve.prenom} ${eleve.nom}</td>
+                <td>${eleve.classe}</td>
+            `;
+
+            listeAyantMange.appendChild(ligne);
+
+        });
+
+    }
+
+
+    // --------------------------------
+    // Élèves non passés
+    // --------------------------------
+
+    const nonPasses =
+        derniereDonneeDashboard.elevesNonPasses
+        .filter(eleve => {
+
+            const texte = (
+
+                String(eleve.id) + " " +
+                eleve.nom + " " +
+                eleve.prenom + " " +
+                eleve.classe
+
+            ).toLowerCase();
+
+            return texte.includes(recherche);
+
+        });
+
+
+    if (nonPasses.length === 0) {
+
+        listeNonPasses.innerHTML = `
+            <tr>
+                <td colspan="3">
+                    Aucun résultat
+                </td>
+            </tr>
+        `;
+
+    } else {
+
+        nonPasses.forEach(eleve => {
+
+            const ligne =
+                document.createElement("tr");
+
+            ligne.innerHTML = `
+                <td>${eleve.id}</td>
+                <td>${eleve.prenom} ${eleve.nom}</td>
+                <td>${eleve.classe}</td>
+            `;
+
+            listeNonPasses.appendChild(ligne);
+
+        });
+
+    }
+
+}
 function chargerDashboard() {
 
     const date =
@@ -186,6 +335,7 @@ function chargerDashboard() {
                 return;
 
             }
+            derniereDonneeDashboard = data;
 
 
             document.getElementById("totalEleves").textContent =
@@ -312,6 +462,27 @@ document.getElementById("btnActualiser")
         "click",
         chargerDashboard
     );
+    document.getElementById("recherche")
+    .addEventListener(
+        "input",
+        afficherRecherche
+    );
+
+
+document.getElementById("btnEffacerRecherche")
+    .addEventListener(
+        "click",
+        function() {
+
+            document.getElementById("recherche")
+                .value = "";
+
+            afficherRecherche();
+
+        }
+    );
+
+    
 chargerDashboard();
     setInterval(
     chargerDashboard,
