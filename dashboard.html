@@ -88,9 +88,9 @@
     </div>
 
 
-    <h2>🕐 Derniers repas</h2>
+    <h2>🟢 Élèves ayant mangé</h2>
 
-    <div id="derniersRepas">
+<div id="elevesAyantMange">
 
     <table class="repas-table">
 
@@ -105,7 +105,7 @@
 
         </thead>
 
-        <tbody id="listeRepas">
+        <tbody id="listeAyantMange">
 
             <tr>
                 <td colspan="4">
@@ -118,6 +118,37 @@
     </table>
 
 </div>
+
+
+<h2>🔴 Élèves non passés</h2>
+
+<div id="elevesNonPasses">
+
+    <table class="repas-table">
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Élève</th>
+                <th>Classe</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="listeNonPasses">
+
+            <tr>
+                <td colspan="3">
+                    Chargement...
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>    
 
 
 </div>
@@ -164,42 +195,85 @@ function chargerDashboard() {
                 data.participation + "%";
 
 
-            const liste =
-                document.getElementById("listeRepas");
+            // --------------------------------
+// Élèves ayant mangé
+// --------------------------------
 
-            liste.innerHTML = "";
+const listeAyantMange =
+    document.getElementById("listeAyantMange");
+
+listeAyantMange.innerHTML = "";
+
+if (!data.elevesAyantMange ||
+    data.elevesAyantMange.length === 0) {
+
+    listeAyantMange.innerHTML = `
+        <tr>
+            <td colspan="4">
+                Aucun élève n'a mangé
+            </td>
+        </tr>
+    `;
+
+} else {
+
+    data.elevesAyantMange.forEach(eleve => {
+
+        const ligne =
+            document.createElement("tr");
+
+        ligne.innerHTML = `
+            <td>${eleve.heure}</td>
+            <td>${eleve.id}</td>
+            <td>${eleve.prenom} ${eleve.nom}</td>
+            <td>${eleve.classe}</td>
+        `;
+
+        listeAyantMange.appendChild(ligne);
+
+    });
+
+}
 
 
-            if (!data.derniersRepas ||
-                data.derniersRepas.length === 0) {
+// --------------------------------
+// Élèves non passés
+// --------------------------------
 
-                liste.innerHTML = `
-                    <tr>
-                        <td colspan="4">
-                            Aucun repas enregistré
-                        </td>
-                    </tr>
-                `;
+const listeNonPasses =
+    document.getElementById("listeNonPasses");
 
-            } else {
+listeNonPasses.innerHTML = "";
 
-                data.derniersRepas.forEach(repas => {
+if (!data.elevesNonPasses ||
+    data.elevesNonPasses.length === 0) {
 
-                    const ligne =
-                        document.createElement("tr");
+    listeNonPasses.innerHTML = `
+        <tr>
+            <td colspan="3">
+                Tous les élèves sont passés ✅
+            </td>
+        </tr>
+    `;
 
-                    ligne.innerHTML = `
-                        <td>${repas.heure}</td>
-                        <td>${repas.id}</td>
-                        <td>${repas.prenom} ${repas.nom}</td>
-                        <td>${repas.classe}</td>
-                    `;
+} else {
 
-                    liste.appendChild(ligne);
+    data.elevesNonPasses.forEach(eleve => {
 
-                });
+        const ligne =
+            document.createElement("tr");
 
-            }
+        ligne.innerHTML = `
+            <td>${eleve.id}</td>
+            <td>${eleve.prenom} ${eleve.nom}</td>
+            <td>${eleve.classe}</td>
+        `;
+
+        listeNonPasses.appendChild(ligne);
+
+    });
+
+}
 
         })
 
