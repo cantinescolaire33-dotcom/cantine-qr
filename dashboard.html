@@ -808,6 +808,83 @@ if (!data.elevesNonPasses ||
         });
 
 }
+
+    function chargerStatistiquesClasses() {
+
+    fetch(API_URL + "?action=classes")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if (data.statut !== "ok") {
+
+                console.error(
+                    "Erreur statistiques classes :",
+                    data
+                );
+
+                return;
+            }
+
+            const listeClasses =
+                document.getElementById("listeClasses");
+
+            listeClasses.innerHTML = "";
+
+            const classes =
+                data.classes || {};
+
+            const nomsClasses =
+                Object.keys(classes).sort();
+
+
+            if (nomsClasses.length === 0) {
+
+                listeClasses.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            Aucune donnée disponible
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            nomsClasses.forEach(function(classe) {
+
+                const infos =
+                    classes[classe];
+
+                const ligne =
+                    document.createElement("tr");
+
+                ligne.innerHTML = `
+                    <td>${classe}</td>
+                    <td>${infos.totalEleves}</td>
+                    <td>${infos.repasPris}</td>
+                    <td>${infos.nonPasses}</td>
+                    <td>${infos.participation}%</td>
+                `;
+
+                listeClasses.appendChild(ligne);
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.error(
+                "Erreur connexion statistiques classes :",
+                error
+            );
+
+        });
+
+}
 // Charger le dashboard
 const dateChoisie =
     document.getElementById("dateChoisie");
@@ -853,6 +930,7 @@ chargerStatistiquesSemaine();
 
 chargerStatistiquesMois();
 
+chargerStatistiquesClasses();
 
 setInterval(
     chargerDashboard,
@@ -866,6 +944,11 @@ setInterval(
 
 setInterval(
     chargerStatistiquesMois,
+    10000
+);
+
+setInterval(
+    chargerStatistiquesClasses,
     10000
 );
 
