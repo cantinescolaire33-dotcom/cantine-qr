@@ -99,8 +99,8 @@ h1{
    ======================================== */
 
 .dashboard-page .container {
-    max-width: 1400px;
-    width: 95%;
+    max-width: 1600px;
+    width: 98%;
     margin: 20px auto;
     padding: 25px;
 }
@@ -307,4 +307,19 @@ h1{
         padding: 8px;
     }
 
+}
+
+/* Évite que les tableaux dépassent du dashboard */
+
+.dashboard-section,
+.detail-semaine,
+.detail-mois,
+.detail-classes {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.repas-table {
+    width: 100%;
+    min-width: 600px;
 }
