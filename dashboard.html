@@ -114,6 +114,51 @@
     </button>
 
 </div>
+    <h2>📊 Statistiques de la semaine</h2>
+
+<div class="stats-semaine">
+
+    <div class="stat-box">
+        <div class="stat-title">
+            📅 Période
+        </div>
+
+        <div id="periodeSemaine" class="stat-value">
+            -
+        </div>
+    </div>
+
+    <div class="stat-box">
+        <div class="stat-title">
+            🍽️ Total repas
+        </div>
+
+        <div id="totalRepasSemaine" class="stat-value">
+            -
+        </div>
+    </div>
+
+    <div class="stat-box">
+        <div class="stat-title">
+            📈 Moyenne / jour
+        </div>
+
+        <div id="moyenneSemaine" class="stat-value">
+            -
+        </div>
+    </div>
+
+</div>
+
+<div class="detail-semaine">
+
+    <h3>📆 Repas par jour</h3>
+
+    <div id="joursSemaine">
+        Chargement...
+    </div>
+
+</div>
     <h2>🟢 Élèves ayant mangé</h2>
 
 <div id="elevesAyantMange">
@@ -182,6 +227,104 @@
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
+    function chargerStatistiquesSemaine() {
+
+    fetch(API_URL + "?action=semaine")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if (data.statut !== "ok") {
+
+                console.error(
+                    "Erreur statistiques :",
+                    data
+                );
+
+                return;
+            }
+
+
+            // Période
+            document.getElementById(
+                "periodeSemaine"
+            ).textContent =
+                data.debut + " → " + data.fin;
+
+
+            // Total repas
+            document.getElementById(
+                "totalRepasSemaine"
+            ).textContent =
+                data.totalRepas;
+
+
+            // Moyenne
+            document.getElementById(
+                "moyenneSemaine"
+            ).textContent =
+                data.moyenneParJour;
+
+
+            // Détail par jour
+            const conteneur =
+                document.getElementById(
+                    "joursSemaine"
+                );
+
+            conteneur.innerHTML = "";
+
+
+            const jours =
+                data.jours || {};
+
+
+            const dates =
+                Object.keys(jours).sort();
+
+
+            if (dates.length === 0) {
+
+                conteneur.innerHTML =
+                    "<p>Aucun repas cette semaine.</p>";
+
+                return;
+            }
+
+
+            dates.forEach(function(date) {
+
+                const ligne =
+                    document.createElement("div");
+
+                ligne.className =
+                    "ligne-jour";
+
+                ligne.innerHTML =
+                    "<strong>" +
+                    date +
+                    "</strong>" +
+                    " — " +
+                    jours[date] +
+                    " repas";
+
+                conteneur.appendChild(ligne);
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.error(
+                "Erreur connexion statistiques :",
+                error
+            );
+
+        });
+
+}
     let derniereDonneeDashboard = null;
 
 function afficherRecherche() {
@@ -485,8 +628,17 @@ document.getElementById("btnEffacerRecherche")
 
     
 chargerDashboard();
-    setInterval(
+
+chargerStatistiquesSemaine();
+
+
+setInterval(
     chargerDashboard,
+    10000
+);
+
+setInterval(
+    chargerStatistiquesSemaine,
     10000
 );
 
