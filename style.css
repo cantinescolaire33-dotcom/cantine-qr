@@ -323,3 +323,107 @@ h1{
     width: 100%;
     min-width: 600px;
 }
+
+/* ========================================
+   BARRE DE CONTROLE DU DASHBOARD
+   ======================================== */
+
+.date-selector,
+.recherche-eleve {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.date-selector label,
+.recherche-eleve label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.date-selector input,
+.recherche-eleve input {
+    padding: 11px 14px;
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+}
+
+.date-selector input {
+    min-width: 180px;
+}
+
+.recherche-eleve input {
+    flex: 1;
+    min-width: 250px;
+}
+
+
+/* Boutons */
+
+.date-selector button,
+.recherche-eleve button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.date-selector button {
+    background: #2E7D32;
+    color: white;
+}
+
+.recherche-eleve button {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.date-selector button:hover,
+.recherche-eleve button:hover {
+    opacity: 0.85;
+}
+
+
+/* Ligne de séparation */
+
+.date-selector {
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.recherche-eleve {
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* Téléphone */
+
+@media (max-width: 600px) {
+
+    .date-selector,
+    .recherche-eleve {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .date-selector label,
+    .recherche-eleve label {
+        width: 100%;
+    }
+
+    .date-selector input,
+    .recherche-eleve input,
+    .date-selector button,
+    .recherche-eleve button {
+        width: 100%;
+    }
+
+}
