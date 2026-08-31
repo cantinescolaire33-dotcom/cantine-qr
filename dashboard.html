@@ -580,6 +580,9 @@ function chargerDashboard() {
             }
             derniereDonneeDashboard = data;
 
+            const rechercheActuelle =
+    document.getElementById("recherche").value;
+
 
             document.getElementById("totalEleves").textContent =
                 data.totalEleves;
@@ -674,8 +677,13 @@ if (!data.elevesNonPasses ||
 
 }
 
-        })
+            // Réappliquer la recherche après actualisation
+            if (rechercheActuelle.trim() !== "") {
+                afficherRecherche();
+            }
 
+        })
+        
         .catch(error => {
 
             console.error(
