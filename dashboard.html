@@ -247,10 +247,23 @@ const API_URL =
 
 
             // Période
-            document.getElementById(
-                "periodeSemaine"
-            ).textContent =
-                data.debut + " → " + data.fin;
+            const debutParts = data.debut.split("-");
+const finParts = data.fin.split("-");
+
+const debutFormate =
+    debutParts[2] + "/" +
+    debutParts[1] + "/" +
+    debutParts[0];
+
+const finFormate =
+    finParts[2] + "/" +
+    finParts[1] + "/" +
+    finParts[0];
+
+document.getElementById(
+    "periodeSemaine"
+).textContent =
+    debutFormate + " → " + finFormate;
 
 
             // Total repas
@@ -301,13 +314,20 @@ const API_URL =
                 ligne.className =
                     "ligne-jour";
 
-                ligne.innerHTML =
-                    "<strong>" +
-                    date +
-                    "</strong>" +
-                    " — " +
-                    jours[date] +
-                    " repas";
+                const parts = date.split("-");
+
+const dateFormatee =
+    parts[2] + "/" +
+    parts[1] + "/" +
+    parts[0];
+
+ligne.innerHTML =
+    "<strong>" +
+    dateFormatee +
+    "</strong>" +
+    " — " +
+    jours[date] +
+    " repas";
 
                 conteneur.appendChild(ligne);
 
