@@ -713,22 +713,29 @@ if (!data.elevesNonPasses ||
                 return;
             }
 
-            // Période
+
+            // ========================================
+            // PÉRIODE
+            // ========================================
+
             const debutParts =
                 data.debut.split("-");
 
             const finParts =
                 data.fin.split("-");
 
+
             const debutFormate =
                 debutParts[2] + "/" +
                 debutParts[1] + "/" +
                 debutParts[0];
 
+
             const finFormate =
                 finParts[2] + "/" +
                 finParts[1] + "/" +
                 finParts[0];
+
 
             document.getElementById(
                 "periodeMois"
@@ -738,30 +745,42 @@ if (!data.elevesNonPasses ||
                 finFormate;
 
 
-            // Total repas
+            // ========================================
+            // TOTAL REPAS
+            // ========================================
+
             document.getElementById(
                 "totalRepasMois"
             ).textContent =
                 data.totalRepas;
 
 
-            // Moyenne
+            // ========================================
+            // MOYENNE
+            // ========================================
+
             document.getElementById(
                 "moyenneMois"
             ).textContent =
                 data.moyenneParJour;
 
 
-            // Repas par jour
+            // ========================================
+            // TABLEAU DES REPAS PAR JOUR
+            // ========================================
+
             const conteneur =
                 document.getElementById(
                     "joursMois"
                 );
 
+
             conteneur.innerHTML = "";
+
 
             const jours =
                 data.jours || {};
+
 
             const dates =
                 Object.keys(jours).sort();
@@ -769,42 +788,94 @@ if (!data.elevesNonPasses ||
 
             if (dates.length === 0) {
 
-                conteneur.innerHTML =
-                    "<p>Aucun repas ce mois-ci.</p>";
+                conteneur.innerHTML = `
+                    <p>
+                        Aucun repas ce mois-ci.
+                    </p>
+                `;
 
                 return;
             }
 
 
+            // ========================================
+            // CRÉATION DU TABLEAU
+            // ========================================
+
+            const table =
+                document.createElement("table");
+
+            table.className =
+                "repas-table";
+
+
+            // En-tête
+
+            const thead =
+                document.createElement("thead");
+
+
+            thead.innerHTML = `
+                <tr>
+                    <th>Date</th>
+                    <th>Élèves</th>
+                    <th>Repas</th>
+                    <th>Non passés</th>
+                    <th>Participation</th>
+                </tr>
+            `;
+
+
+            table.appendChild(thead);
+
+
+            // Corps
+
+            const tbody =
+                document.createElement("tbody");
+
+
             dates.forEach(function(date) {
 
-                const ligne =
-                    document.createElement("div");
+                const infos =
+                    jours[date];
 
-                ligne.className =
-                    "ligne-jour";
 
                 const parts =
                     date.split("-");
+
 
                 const dateFormatee =
                     parts[2] + "/" +
                     parts[1] + "/" +
                     parts[0];
 
-                ligne.innerHTML =
-                    "<strong>" +
-                    dateFormatee +
-                    "</strong>" +
-                    " — " +
-                    jours[date] +
-                    " repas";
 
-                conteneur.appendChild(ligne);
+                const ligne =
+                    document.createElement("tr");
+
+
+                ligne.innerHTML = `
+                    <td>${dateFormatee}</td>
+                    <td>${infos.totalEleves}</td>
+                    <td>${infos.repas}</td>
+                    <td>${infos.nonPasses}</td>
+                    <td>${infos.participation}%</td>
+                `;
+
+
+                tbody.appendChild(ligne);
 
             });
 
+
+            table.appendChild(tbody);
+
+
+            conteneur.appendChild(table);
+
         })
+
 
         .catch(error => {
 
@@ -816,7 +887,6 @@ if (!data.elevesNonPasses ||
         });
 
 }
-
     function chargerStatistiquesClasses() {
 
     fetch(API_URL + "?action=classes")
