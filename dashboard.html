@@ -134,6 +134,7 @@
     </select>
 
 </div>
+    <div id="blocSemaine">
 
 
     <h2>📊 Statistiques de la semaine</h2>
@@ -179,6 +180,13 @@
     <div id="joursSemaine">
         Chargement...
     </div>
+
+</div>
+
+</div>
+
+
+<div id="blocMois" style="display:none;">
 
     <h2>📅 Statistiques du mois</h2>
 
@@ -230,7 +238,6 @@
 </div>
 
 </div>
-
     <h2>🏫 Participation par classe</h2>
 
 <div class="detail-classes">
@@ -1130,6 +1137,38 @@ setInterval(
     chargerStatistiquesClasses,
     10000
 );
+    // ========================================
+// SÉLECTEUR SEMAINE / MOIS
+// ========================================
+
+document.getElementById("periodeStats")
+    .addEventListener(
+        "change",
+        function() {
+
+            const choix = this.value;
+
+            const blocSemaine =
+                document.getElementById("blocSemaine");
+
+            const blocMois =
+                document.getElementById("blocMois");
+
+
+            if (choix === "semaine") {
+
+                blocSemaine.style.display = "block";
+                blocMois.style.display = "none";
+
+            } else {
+
+                blocSemaine.style.display = "none";
+                blocMois.style.display = "block";
+
+            }
+
+        }
+    );
 
 </script>
 </body>
