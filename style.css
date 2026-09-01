@@ -601,3 +601,41 @@ h1{
     }
 
 }
+
+```css
+/* ========================================
+   SÉLECTEUR DES STATISTIQUES
+======================================== */
+
+.selecteur-statistiques {
+    width: 100%;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f4f6f9;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+.selecteur-statistiques label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.selecteur-statistiques select {
+    padding: 10px 15px;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    font-size: 16px;
+
+    background: white;
+
+    cursor: pointer;
+}
+```
