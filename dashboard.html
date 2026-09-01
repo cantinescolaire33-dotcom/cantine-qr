@@ -238,6 +238,21 @@
 </div>
 
 </div>
+    <div class="selecteur-classe">
+
+    <label for="classeStats">
+        🏫 Classe
+    </label>
+
+    <select id="classeStats">
+
+        <option value="toutes">
+            Toutes les classes
+        </option>
+
+    </select>
+
+</div>
     <h2>🏫 Participation par classe</h2>
 
 <div class="detail-classes">
@@ -1118,6 +1133,8 @@ chargerStatistiquesMois();
 
 chargerStatistiquesClasses();
 
+chargerSelecteurClasses();
+
 setInterval(
     chargerDashboard,
     10000
@@ -1169,6 +1186,69 @@ document.getElementById("periodeStats")
 
         }
     );
+    // ========================================
+// SÉLECTEUR DES CLASSES
+// ========================================
+
+function chargerSelecteurClasses() {
+
+    fetch(API_URL + "?action=classes")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if (data.statut !== "ok") {
+                console.error(
+                    "Erreur récupération classes :",
+                    data
+                );
+                return;
+            }
+
+            const select =
+                document.getElementById("classeStats");
+
+            if (!select) {
+                return;
+            }
+
+            // Garder "Toutes les classes"
+            select.innerHTML = `
+                <option value="toutes">
+                    Toutes les classes
+                </option>
+            `;
+
+            const classes =
+                data.classes || {};
+
+            const nomsClasses =
+                Object.keys(classes).sort();
+
+            nomsClasses.forEach(function(classe) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = classe;
+                option.textContent = classe;
+
+                select.appendChild(option);
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.error(
+                "Erreur connexion classes :",
+                error
+            );
+
+        });
+}
 
 </script>
 </body>
