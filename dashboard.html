@@ -325,45 +325,66 @@ const API_URL =
             }
 
 
-            // Période
-            const debutParts = data.debut.split("-");
-const finParts = data.fin.split("-");
+            // ========================================
+            // PÉRIODE
+            // ========================================
 
-const debutFormate =
-    debutParts[2] + "/" +
-    debutParts[1] + "/" +
-    debutParts[0];
+            const debutParts =
+                data.debut.split("-");
 
-const finFormate =
-    finParts[2] + "/" +
-    finParts[1] + "/" +
-    finParts[0];
-
-document.getElementById(
-    "periodeSemaine"
-).textContent =
-    debutFormate + " → " + finFormate;
+            const finParts =
+                data.fin.split("-");
 
 
-            // Total repas
+            const debutFormate =
+                debutParts[2] + "/" +
+                debutParts[1] + "/" +
+                debutParts[0];
+
+
+            const finFormate =
+                finParts[2] + "/" +
+                finParts[1] + "/" +
+                finParts[0];
+
+
+            document.getElementById(
+                "periodeSemaine"
+            ).textContent =
+                debutFormate +
+                " → " +
+                finFormate;
+
+
+            // ========================================
+            // TOTAL REPAS
+            // ========================================
+
             document.getElementById(
                 "totalRepasSemaine"
             ).textContent =
                 data.totalRepas;
 
 
-            // Moyenne
+            // ========================================
+            // MOYENNE
+            // ========================================
+
             document.getElementById(
                 "moyenneSemaine"
             ).textContent =
                 data.moyenneParJour;
 
 
-            // Détail par jour
+            // ========================================
+            // TABLEAU REPAS PAR JOUR
+            // ========================================
+
             const conteneur =
                 document.getElementById(
                     "joursSemaine"
                 );
+
 
             conteneur.innerHTML = "";
 
@@ -376,43 +397,102 @@ document.getElementById(
                 Object.keys(jours).sort();
 
 
+            // Aucun repas
+
             if (dates.length === 0) {
 
-                conteneur.innerHTML =
-                    "<p>Aucun repas cette semaine.</p>";
+                conteneur.innerHTML = `
+                    <p>
+                        Aucun repas cette semaine.
+                    </p>
+                `;
 
                 return;
             }
 
 
+            // ========================================
+            // CRÉATION DU TABLEAU
+            // ========================================
+
+            const table =
+                document.createElement("table");
+
+            table.className =
+                "repas-table";
+
+
+            // ========================================
+            // EN-TÊTE
+            // ========================================
+
+            const thead =
+                document.createElement("thead");
+
+
+            thead.innerHTML = `
+                <tr>
+                    <th>Date</th>
+                    <th>Élèves</th>
+                    <th>Repas</th>
+                    <th>Non passés</th>
+                    <th>Participation</th>
+                </tr>
+            `;
+
+
+            table.appendChild(thead);
+
+
+            // ========================================
+            // CORPS DU TABLEAU
+            // ========================================
+
+            const tbody =
+                document.createElement("tbody");
+
+
             dates.forEach(function(date) {
 
+                const infos =
+                    jours[date];
+
+
+                const parts =
+                    date.split("-");
+
+
+                const dateFormatee =
+                    parts[2] + "/" +
+                    parts[1] + "/" +
+                    parts[0];
+
+
                 const ligne =
-                    document.createElement("div");
+                    document.createElement("tr");
 
-                ligne.className =
-                    "ligne-jour";
 
-                const parts = date.split("-");
+                ligne.innerHTML = `
+                    <td>${dateFormatee}</td>
+                    <td>${infos.totalEleves}</td>
+                    <td>${infos.repas}</td>
+                    <td>${infos.nonPasses}</td>
+                    <td>${infos.participation}%</td>
+                `;
 
-const dateFormatee =
-    parts[2] + "/" +
-    parts[1] + "/" +
-    parts[0];
 
-ligne.innerHTML =
-    "<strong>" +
-    dateFormatee +
-    "</strong>" +
-    " — " +
-    jours[date] +
-    " repas";
-
-                conteneur.appendChild(ligne);
+                tbody.appendChild(ligne);
 
             });
 
+
+            table.appendChild(tbody);
+
+
+            conteneur.appendChild(table);
+
         })
+
 
         .catch(error => {
 
@@ -423,8 +503,7 @@ ligne.innerHTML =
 
         });
 
-}
-    let derniereDonneeDashboard = null;
+}    let derniereDonneeDashboard = null;
 
 function afficherRecherche() {
 
