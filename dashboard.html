@@ -711,121 +711,252 @@ function chargerDashboard() {
 
             if (data.statut !== "ok") {
 
-                console.error("Erreur API :", data);
+                console.error(
+                    "Erreur API :",
+                    data
+                );
 
                 return;
-
             }
+
+
+            // ========================================
+            // MÉMORISER LES DONNÉES
+            // ========================================
+
             derniereDonneeDashboard = data;
 
+
+            // ========================================
+            // MÉMORISER LES FILTRES ACTUELS
+            // ========================================
+
             const rechercheActuelle =
-    document.getElementById("recherche").value;
-            const classeActuelle = classeSelectionnee;
+                document.getElementById("recherche").value;
+
+            const classeActuelle =
+                classeSelectionnee;
 
 
-            document.getElementById("totalEleves").textContent =
-                data.totalEleves;
+            // ========================================
+            // FILTRAGE PAR CLASSE
+            // ========================================
 
-            document.getElementById("repasPris").textContent =
-                data.repasPris;
+            let elevesAyantMange =
+                data.elevesAyantMange || [];
 
-            document.getElementById("nonPasses").textContent =
-                data.nonPasses;
-
-            document.getElementById("participation").textContent =
-                data.participation + "%";
+            let elevesNonPasses =
+                data.elevesNonPasses || [];
 
 
-            // --------------------------------
-// Élèves ayant mangé
-// --------------------------------
+            if (classeActuelle !== "toutes") {
 
-const listeAyantMange =
-    document.getElementById("listeAyantMange");
-
-listeAyantMange.innerHTML = "";
-
-if (!data.elevesAyantMange ||
-    data.elevesAyantMange.length === 0) {
-
-    listeAyantMange.innerHTML = `
-        <tr>
-            <td colspan="4">
-                Aucun élève n'a mangé
-            </td>
-        </tr>
-    `;
-
-} else {
-
-    data.elevesAyantMange.forEach(eleve => {
-
-        const ligne =
-            document.createElement("tr");
-
-        ligne.innerHTML = `
-            <td>${eleve.heure}</td>
-            <td>${eleve.id}</td>
-            <td>${eleve.prenom} ${eleve.nom}</td>
-            <td>${eleve.classe}</td>
-        `;
-
-        listeAyantMange.appendChild(ligne);
-
-    });
-
-}
+                elevesAyantMange =
+                    elevesAyantMange.filter(
+                        eleve =>
+                            eleve.classe === classeActuelle
+                    );
 
 
-// --------------------------------
-// Élèves non passés
-// --------------------------------
+                elevesNonPasses =
+                    elevesNonPasses.filter(
+                        eleve =>
+                            eleve.classe === classeActuelle
+                    );
 
-const listeNonPasses =
-    document.getElementById("listeNonPasses");
+            }
 
-listeNonPasses.innerHTML = "";
 
-if (!data.elevesNonPasses ||
-    data.elevesNonPasses.length === 0) {
+            // ========================================
+            // CALCUL DES STATISTIQUES
+            // ========================================
 
-    listeNonPasses.innerHTML = `
-        <tr>
-            <td colspan="3">
-                Tous les élèves sont passés ✅
-            </td>
-        </tr>
-    `;
+            let totalEleves;
 
-} else {
+            if (classeActuelle === "toutes") {
 
-    data.elevesNonPasses.forEach(eleve => {
+                totalEleves =
+                    data.totalEleves;
 
-        const ligne =
-            document.createElement("tr");
+            } else {
 
-        ligne.innerHTML = `
-            <td>${eleve.id}</td>
-            <td>${eleve.prenom} ${eleve.nom}</td>
-            <td>${eleve.classe}</td>
-        `;
+                // Pour connaître le nombre total
+                // d'élèves de la classe sélectionnée,
+                // on utilise les élèves ayant mangé
+                // + les élèves non passés.
 
-        listeNonPasses.appendChild(ligne);
+                totalEleves =
+                    elevesAyantMange.length +
+                    elevesNonPasses.length;
 
-    });
+            }
 
-}
 
-            /// Réappliquer les filtres après actualisation
-if (
-    rechercheActuelle.trim() !== "" ||
-    classeActuelle !== "toutes"
-) {
-    afficherRecherche();
-}
+            const repasPris =
+                elevesAyantMange.length;
+
+
+            const nonPasses =
+                elevesNonPasses.length;
+
+
+            let participation = 0;
+
+            if (totalEleves > 0) {
+
+                participation =
+                    Math.round(
+                        (repasPris / totalEleves) * 100
+                    );
+
+            }
+
+
+            // ========================================
+            // AFFICHER LES CARTES
+            // ========================================
+
+            document.getElementById(
+                "totalEleves"
+            ).textContent =
+                totalEleves;
+
+
+            document.getElementById(
+                "repasPris"
+            ).textContent =
+                repasPris;
+
+
+            document.getElementById(
+                "nonPasses"
+            ).textContent =
+                nonPasses;
+
+
+            document.getElementById(
+                "participation"
+            ).textContent =
+                participation + "%";
+
+
+            // ========================================
+            // ÉLÈVES AYANT MANGÉ
+            // ========================================
+
+            const listeAyantMange =
+                document.getElementById(
+                    "listeAyantMange"
+                );
+
+
+            listeAyantMange.innerHTML = "";
+
+
+            if (
+                elevesAyantMange.length === 0
+            ) {
+
+                listeAyantMange.innerHTML = `
+                    <tr>
+                        <td colspan="4">
+                            Aucun élève n'a mangé
+                        </td>
+                    </tr>
+                `;
+
+            } else {
+
+                elevesAyantMange.forEach(
+                    eleve => {
+
+                        const ligne =
+                            document.createElement("tr");
+
+
+                        ligne.innerHTML = `
+                            <td>${eleve.heure}</td>
+                            <td>${String(eleve.id).padStart(4, "0")}</td>
+                            <td>${eleve.prenom} ${eleve.nom}</td>
+                            <td>${eleve.classe}</td>
+                        `;
+
+
+                        listeAyantMange.appendChild(
+                            ligne
+                        );
+
+                    }
+                );
+
+            }
+
+
+            // ========================================
+            // ÉLÈVES NON PASSÉS
+            // ========================================
+
+            const listeNonPasses =
+                document.getElementById(
+                    "listeNonPasses"
+                );
+
+
+            listeNonPasses.innerHTML = "";
+
+
+            if (
+                elevesNonPasses.length === 0
+            ) {
+
+                listeNonPasses.innerHTML = `
+                    <tr>
+                        <td colspan="3">
+                            Tous les élèves sont passés ✅
+                        </td>
+                    </tr>
+                `;
+
+            } else {
+
+                elevesNonPasses.forEach(
+                    eleve => {
+
+                        const ligne =
+                            document.createElement("tr");
+
+
+                        ligne.innerHTML = `
+                            <td>${String(eleve.id).padStart(4, "0")}</td>
+                            <td>${eleve.prenom} ${eleve.nom}</td>
+                            <td>${eleve.classe}</td>
+                        `;
+
+
+                        listeNonPasses.appendChild(
+                            ligne
+                        );
+
+                    }
+                );
+
+            }
+
+
+            // ========================================
+            // RÉAPPLIQUER LA RECHERCHE
+            // ========================================
+
+            if (
+                rechercheActuelle.trim() !== ""
+            ) {
+
+                afficherRecherche();
+
+            }
 
         })
-        
+
         .catch(error => {
 
             console.error(
@@ -836,7 +967,6 @@ if (
         });
 
 }
-
     function chargerStatistiquesMois() {
 
     fetch(API_URL + "?action=mois")
