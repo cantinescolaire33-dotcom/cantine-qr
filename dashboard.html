@@ -720,6 +720,7 @@ function chargerDashboard() {
 
             const rechercheActuelle =
     document.getElementById("recherche").value;
+            const classeActuelle = classeSelectionnee;
 
 
             document.getElementById("totalEleves").textContent =
@@ -815,10 +816,13 @@ if (!data.elevesNonPasses ||
 
 }
 
-            // Réappliquer la recherche après actualisation
-            if (rechercheActuelle.trim() !== "") {
-                afficherRecherche();
-            }
+            /// Réappliquer les filtres après actualisation
+if (
+    rechercheActuelle.trim() !== "" ||
+    classeActuelle !== "toutes"
+) {
+    afficherRecherche();
+}
 
         })
         
