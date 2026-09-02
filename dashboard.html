@@ -347,7 +347,11 @@ const API_URL =
 "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
     function chargerStatistiquesSemaine() {
 
-    fetch(API_URL + "?action=semaine")
+    fetch(
+    API_URL +
+    "?action=semaine&classe=" +
+    encodeURIComponent(classeSelectionnee)
+)
 
         .then(response => response.json())
 
