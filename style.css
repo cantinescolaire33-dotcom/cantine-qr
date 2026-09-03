@@ -639,3 +639,184 @@ h1{
     cursor: pointer;
 }
 
+```css
+/* =========================================
+   TABLEAU DE BORD - 2 COLONNES
+   ========================================= */
+
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 25px;
+    align-items: start;
+}
+
+.bloc-gauche,
+.bloc-droit {
+    min-width: 0;
+}
+
+/* Colonne gauche */
+.bloc-gauche {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Colonne droite */
+.bloc-droit {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Les 4 indicateurs */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+/* Cartes indicateurs */
+.dashboard .card {
+    background: #f8fafc;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 18px 10px;
+    text-align: center;
+}
+
+.dashboard .card-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.dashboard .card-title {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.dashboard .card-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2E7D32;
+}
+
+/* Recherche */
+.recherche-eleve {
+    width: 100%;
+    margin: 0 0 20px 0;
+    padding: 15px;
+    background: #f4f6f9;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.recherche-eleve label {
+    font-weight: bold;
+}
+
+.recherche-eleve input {
+    flex: 1;
+    min-width: 180px;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+}
+
+.recherche-eleve button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Tables */
+.repas-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.repas-table th,
+.repas-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eeeeee;
+    text-align: left;
+}
+
+.repas-table th {
+    background: #f5f7f9;
+    font-weight: bold;
+}
+
+/* Évite que les tableaux débordent */
+.detail-classes,
+#elevesAyantMange,
+#elevesNonPasses,
+.detail-semaine,
+.detail-mois {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Espacement des sections */
+.bloc-gauche > h2,
+.bloc-droit > h2 {
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+/* =========================================
+   TABLETTE
+   ========================================= */
+
+@media (max-width: 1000px) {
+
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .dashboard {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .dashboard .card {
+        padding: 15px 8px;
+    }
+
+    .dashboard .card-value {
+        font-size: 21px;
+    }
+
+    .recherche-eleve {
+        align-items: stretch;
+    }
+
+    .recherche-eleve input,
+    .recherche-eleve button {
+        width: 100%;
+    }
+
+}
+
