@@ -897,53 +897,34 @@ function chargerDashboard() {
 }
     function chargerStatistiquesMois() {
 
-    fetch(API_URL + "?action=mois")
+    const select =
+        document.getElementById("moisStats");
+
+    if (!select) {
+        return;
+    }
+
+    const mois =
+        select.value;
+
+    if (!mois) {
+        return;
+    }
+
+    fetch(
+        API_URL +
+        "?action=mois&mois=" +
+        encodeURIComponent(mois)
+    )
 
         .then(response => response.json())
 
         .then(data => {
 
-            if (data.statut !== "ok") {
-
-                console.error(
-                    "Erreur statistiques mois :",
-                    data
-                );
-
-                return;
-            }
-
-
-            // ========================================
-            // PÉRIODE
-            // ========================================
-
-            const debutParts =
-                data.debut.split("-");
-
-            const finParts =
-                data.fin.split("-");
-
-
-            const debutFormate =
-                debutParts[2] + "/" +
-                debutParts[1] + "/" +
-                debutParts[0];
-
-
-            const finFormate =
-                finParts[2] + "/" +
-                finParts[1] + "/" +
-                finParts[0];
-
-
-            document.getElementById(
-                "periodeMois"
-            ).textContent =
-                debutFormate +
-                " → " +
-                finFormate;
-
+            console.log(
+                "Statistiques mensuelles :",
+                data
+            );
 
             // ========================================
             // TOTAL REPAS
@@ -952,21 +933,31 @@ function chargerDashboard() {
             document.getElementById(
                 "totalRepasMois"
             ).textContent =
-                data.totalRepas;
+                data.totalRepas || 0;
 
 
             // ========================================
-            // MOYENNE
+            // MOYENNE / JOUR
             // ========================================
 
             document.getElementById(
                 "moyenneMois"
             ).textContent =
-                data.moyenneParJour;
+                data.moyenneJour || 0;
 
 
             // ========================================
-            // TABLEAU DES REPAS PAR JOUR
+            // NOMBRE DE JOURS
+            // ========================================
+
+            document.getElementById(
+                "nombreJoursMois"
+            ).textContent =
+                data.nombreJours || 0;
+
+
+            // ========================================
+            // REPAS PAR JOUR
             // ========================================
 
             const conteneur =
@@ -974,19 +965,16 @@ function chargerDashboard() {
                     "joursMois"
                 );
 
-
             conteneur.innerHTML = "";
 
 
             const jours =
-                data.jours || {};
+                data.jours || [];
 
 
-            const dates =
-                Object.keys(jours).sort();
+            // Aucun repas
 
-
-            if (dates.length === 0) {
+            if (jours.length === 0) {
 
                 conteneur.innerHTML = `
                     <p>
@@ -999,7 +987,7 @@ function chargerDashboard() {
 
 
             // ========================================
-            // CRÉATION DU TABLEAU
+            // TABLEAU
             // ========================================
 
             const table =
@@ -1009,45 +997,42 @@ function chargerDashboard() {
                 "repas-table";
 
 
-            // En-tête
+            // ========================================
+            // EN-TÊTE
+            // ========================================
 
             const thead =
                 document.createElement("thead");
 
-
             thead.innerHTML = `
                 <tr>
                     <th>Date</th>
-                    <th>Élèves</th>
                     <th>Repas</th>
-                    <th>Non passés</th>
-                    <th>Participation</th>
                 </tr>
             `;
-
 
             table.appendChild(thead);
 
 
-            // Corps
+            // ========================================
+            // CORPS
+            // ========================================
 
             const tbody =
                 document.createElement("tbody");
 
 
-            dates.forEach(function(date) {
-
-                const infos =
-                    jours[date];
-
+            jours.forEach(function(jour) {
 
                 const parts =
-                    date.split("-");
+                    jour.date.split("-");
 
 
                 const dateFormatee =
-                    parts[2] + "/" +
-                    parts[1] + "/" +
+                    parts[2] +
+                    "/" +
+                    parts[1] +
+                    "/" +
                     parts[0];
 
 
@@ -1057,10 +1042,7 @@ function chargerDashboard() {
 
                 ligne.innerHTML = `
                     <td>${dateFormatee}</td>
-                    <td>${infos.totalEleves}</td>
-                    <td>${infos.repas}</td>
-                    <td>${infos.nonPasses}</td>
-                    <td>${infos.participation}%</td>
+                    <td>${jour.repas}</td>
                 `;
 
 
@@ -1071,23 +1053,20 @@ function chargerDashboard() {
 
             table.appendChild(tbody);
 
-
             conteneur.appendChild(table);
 
         })
 
-
         .catch(error => {
 
             console.error(
-                "Erreur connexion statistiques mois :",
+                "Erreur statistiques mensuelles :",
                 error
             );
 
         });
 
-}
-    function chargerStatistiquesClasses() {
+}    function chargerStatistiquesClasses() {
 
     fetch(API_URL + "?action=classes")
 
