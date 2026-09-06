@@ -819,3 +819,31 @@ h1{
 
 }
 
+/* =========================================
+   AFFICHAGE MOBILE DU TABLEAU DE BORD
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .dashboard-layout {
+        display: block;
+    }
+
+    .bloc-gauche,
+    .bloc-droit {
+        width: 100%;
+    }
+
+    .bloc-droit {
+        margin-top: 30px;
+    }
+
+    .dashboard-page .container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 15px;
+        border-radius: 0;
+    }
+
+}
