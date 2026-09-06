@@ -127,8 +127,71 @@
     </button>
 
 </div>
+<div class="bloc-gauche-bas">
+   
+    <h2>🟢 Élèves ayant mangé</h2>
 
-        </div>
+<div id="elevesAyantMange">
+
+    <table class="repas-table">
+
+        <thead>
+
+            <tr>
+                <th>Heure</th>
+                <th>ID</th>
+                <th>Élève</th>
+                <th>Classe</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="listeAyantMange">
+
+            <tr>
+                <td colspan="4">
+                    Chargement...
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<h2>🔴 Élèves non passés</h2>
+
+<div id="elevesNonPasses">
+
+    <table class="repas-table">
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Élève</th>
+                <th>Classe</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="listeNonPasses">
+
+            <tr>
+                <td colspan="3">
+                    Chargement...
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</div>
 
 <div class="bloc-droit">
     
@@ -205,72 +268,6 @@
 
 </div>
 
-<div class="bloc-gauche-bas">
-   
-    <h2>🟢 Élèves ayant mangé</h2>
-
-<div id="elevesAyantMange">
-
-    <table class="repas-table">
-
-        <thead>
-
-            <tr>
-                <th>Heure</th>
-                <th>ID</th>
-                <th>Élève</th>
-                <th>Classe</th>
-            </tr>
-
-        </thead>
-
-        <tbody id="listeAyantMange">
-
-            <tr>
-                <td colspan="4">
-                    Chargement...
-                </td>
-            </tr>
-
-        </tbody>
-
-    </table>
-
-</div>
-
-
-<h2>🔴 Élèves non passés</h2>
-
-<div id="elevesNonPasses">
-
-    <table class="repas-table">
-
-        <thead>
-
-            <tr>
-                <th>ID</th>
-                <th>Élève</th>
-                <th>Classe</th>
-            </tr>
-
-        </thead>
-
-        <tbody id="listeNonPasses">
-
-            <tr>
-                <td colspan="3">
-                    Chargement...
-                </td>
-            </tr>
-
-        </tbody>
-
-    </table>
-
-</div>    
-
-
-</div>
 <script>
 
 const API_URL =
