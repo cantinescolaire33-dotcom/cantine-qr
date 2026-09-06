@@ -1142,6 +1142,59 @@ function chargerDashboard() {
         });
 
 }
+function chargerSelecteurMois() {
+
+    const select =
+        document.getElementById("moisStats");
+
+    if (!select) {
+        return;
+    }
+
+    select.innerHTML = "";
+
+    const aujourdHui = new Date();
+
+    for (let i = 0; i < 12; i++) {
+
+        const date =
+            new Date(
+                aujourdHui.getFullYear(),
+                aujourdHui.getMonth() - i,
+                1
+            );
+
+        const annee =
+            date.getFullYear();
+
+        const mois =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
+
+        const valeur =
+            annee + "-" + mois;
+
+        const option =
+            document.createElement("option");
+
+        option.value = valeur;
+
+        option.textContent =
+            date.toLocaleDateString(
+                "fr-FR",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        select.appendChild(option);
+    }
+
+    // Charger automatiquement le mois actuel
+    chargerStatistiquesMois();
+}
 // Charger le dashboard
 const dateChoisie =
     document.getElementById("dateChoisie");
@@ -1185,11 +1238,21 @@ chargerDashboard();
 
 chargerStatistiquesSemaine();
 
-chargerStatistiquesMois();
-
 chargerStatistiquesClasses();
 
 chargerSelecteurClasses();
+
+chargerSelecteurMois();
+
+    document.getElementById("moisStats")
+    .addEventListener(
+        "change",
+        function() {
+
+            chargerStatistiquesMois();
+
+        }
+    );
 
 setInterval(
     chargerDashboard,
