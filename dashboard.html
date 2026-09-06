@@ -274,208 +274,8 @@
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
-    function chargerStatistiquesSemaine() {
-
-    fetch(
-    API_URL +
-    "?action=semaine&classe=" +
-    encodeURIComponent(classeSelectionnee)
-)
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            if (data.statut !== "ok") {
-
-                console.error(
-                    "Erreur statistiques :",
-                    data
-                );
-
-                return;
-            }
-
-
-            // ========================================
-            // PÉRIODE
-            // ========================================
-
-            const debutParts =
-                data.debut.split("-");
-
-            const finParts =
-                data.fin.split("-");
-
-
-            const debutFormate =
-                debutParts[2] + "/" +
-                debutParts[1] + "/" +
-                debutParts[0];
-
-
-            const finFormate =
-                finParts[2] + "/" +
-                finParts[1] + "/" +
-                finParts[0];
-
-
-            document.getElementById(
-                "periodeSemaine"
-            ).textContent =
-                debutFormate +
-                " → " +
-                finFormate;
-
-
-            // ========================================
-            // TOTAL REPAS
-            // ========================================
-
-            document.getElementById(
-                "totalRepasSemaine"
-            ).textContent =
-                data.totalRepas;
-
-
-            // ========================================
-            // MOYENNE
-            // ========================================
-
-            document.getElementById(
-                "moyenneSemaine"
-            ).textContent =
-                data.moyenneParJour;
-
-
-            // ========================================
-            // TABLEAU REPAS PAR JOUR
-            // ========================================
-
-            const conteneur =
-                document.getElementById(
-                    "joursSemaine"
-                );
-
-
-            conteneur.innerHTML = "";
-
-
-            const jours =
-                data.jours || {};
-
-
-            const dates =
-                Object.keys(jours).sort();
-
-
-            // Aucun repas
-
-            if (dates.length === 0) {
-
-                conteneur.innerHTML = `
-                    <p>
-                        Aucun repas cette semaine.
-                    </p>
-                `;
-
-                return;
-            }
-
-
-            // ========================================
-            // CRÉATION DU TABLEAU
-            // ========================================
-
-            const table =
-                document.createElement("table");
-
-            table.className =
-                "repas-table";
-
-
-            // ========================================
-            // EN-TÊTE
-            // ========================================
-
-            const thead =
-                document.createElement("thead");
-
-
-            thead.innerHTML = `
-                <tr>
-                    <th>Date</th>
-                    <th>Élèves</th>
-                    <th>Repas</th>
-                    <th>Non passés</th>
-                    <th>Participation</th>
-                </tr>
-            `;
-
-
-            table.appendChild(thead);
-
-
-            // ========================================
-            // CORPS DU TABLEAU
-            // ========================================
-
-            const tbody =
-                document.createElement("tbody");
-
-
-            dates.forEach(function(date) {
-
-                const infos =
-                    jours[date];
-
-
-                const parts =
-                    date.split("-");
-
-
-                const dateFormatee =
-                    parts[2] + "/" +
-                    parts[1] + "/" +
-                    parts[0];
-
-
-                const ligne =
-                    document.createElement("tr");
-
-
-                ligne.innerHTML = `
-                    <td>${dateFormatee}</td>
-                    <td>${infos.totalEleves}</td>
-                    <td>${infos.repas}</td>
-                    <td>${infos.nonPasses}</td>
-                    <td>${infos.participation}%</td>
-                `;
-
-
-                tbody.appendChild(ligne);
-
-            });
-
-
-            table.appendChild(tbody);
-
-
-            conteneur.appendChild(table);
-
-        })
-
-
-        .catch(error => {
-
-            console.error(
-                "Erreur connexion statistiques :",
-                error
-            );
-
-        });
-
-}    let derniereDonneeDashboard = null;
+    
+   let derniereDonneeDashboard = null;
      let classeSelectionnee = "toutes";
 
 function afficherRecherche() {
@@ -1238,7 +1038,6 @@ document.getElementById("btnEffacerRecherche")
     
 chargerDashboard();
 
-chargerStatistiquesSemaine();
 
 chargerStatistiquesClasses();
 
@@ -1261,10 +1060,6 @@ setInterval(
     10000
 );
 
-setInterval(
-    chargerStatistiquesSemaine,
-    10000
-);
 
 
 setInterval(
