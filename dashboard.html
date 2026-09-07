@@ -428,10 +428,12 @@ function chargerDashboard() {
         document.getElementById("dateChoisie").value;
 
     fetch(
-        API_URL +
-        "?action=dashboard&date=" +
-        encodeURIComponent(date)
-    )
+    API_URL +
+    "?action=dashboard&date=" +
+    encodeURIComponent(date) +
+    "&classe=" +
+    encodeURIComponent(classeSelectionnee)
+)
 
         .then(response => response.json())
 
