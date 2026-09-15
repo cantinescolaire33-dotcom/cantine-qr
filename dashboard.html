@@ -274,6 +274,17 @@
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzL_0nXfOEip0sxIxzUUVSz4oJBvup35ZhAAsps1t9IgjZdyEGPQdXB741xFO1DcuVA/exec";
+    fetch(API_URL + "?action=mois&mois=2026-06")
+    .then(response => {
+        console.log("STATUT API :", response.status);
+        return response.text();
+    })
+    .then(data => {
+        console.log("REPONSE API TEST :", data);
+    })
+    .catch(error => {
+        console.error("ERREUR API TEST :", error);
+    });
     
    let derniereDonneeDashboard = null;
      let classeSelectionnee = "toutes";
