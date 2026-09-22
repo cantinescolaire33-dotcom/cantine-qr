@@ -7,41 +7,42 @@ async function trouverCamera() {
 
     const cameras = await Html5Qrcode.getCameras();
 
-
     if (!cameras || cameras.length === 0) {
-
         throw new Error("Aucune caméra détectée");
-
     }
 
+    console.log("Caméras détectées :", cameras);
 
-    // Cherche une caméra arrière
+    // Cherche d'abord une caméra arrière
+    const camerasArriere = cameras.filter(camera => {
 
-    const camerasArriere = cameras.filter(camera =>
-    camera.label.toLowerCase().includes("back")
-);
+        const label =
+            (camera.label || "").toLowerCase();
 
+        return (
+            label.includes("back") ||
+            label.includes("rear") ||
+            label.includes("environment")
+        );
 
-if (camerasArriere.length > 1) {
+    });
 
-    // On prend la dernière caméra arrière disponible
-    cameraId = camerasArriere[camerasArriere.length - 1].id;
+    if (camerasArriere.length > 0) {
 
-}
-else if (camerasArriere.length === 1) {
+        cameraId =
+            camerasArriere[camerasArriere.length - 1].id;
 
-    cameraId = camerasArriere[0].id;
+    } else {
 
-}
+        // Si aucune caméra arrière n'est identifiée,
+        // on utilise simplement la première caméra disponible
+        cameraId = cameras[0].id;
 
-
-    
-
+    }
 
     console.log("Caméra utilisée :", cameraId);
 
 }
-
 
 
 async function demarrerScanner(callback) {
