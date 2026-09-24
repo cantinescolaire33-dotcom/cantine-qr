@@ -273,11 +273,8 @@
 <script>
 
 const API_URL =
-"https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnSvKBPl9or0CusVENZAvEpxsar4_fun6Unz0CRpFxT613X8_Umkb-LjZk2oXoHSs-NUBq6TcTfT_pAu4eFq5qpwcAVeMhoGtLBUaZH_bgA7_E729T-tVX9ztJ0DT2CTZYa1kg_cHB3vW85OHr0ZmyAFyOLVIej3BLTpYSssdonyznvtevDqMb6pRvsTz1WrUgIs1MtI2JkwZO-ddTWfSCAZgsGnia-Dz3lUUYi8M8wOnr9Fvoll6jjZ1DlR5yy-aejZuriB6Lc8lSvDhLYOr-7qyXJ38J2hKj8I2PteeP-vImgyzaB8HgEEr6pDVw&lib=MpyyEC-3Xr5rlghm9IBPSFTfwbGZGOD4k";
-    fetch(API_URL + "?action=mois&mois=2026-06")
-    .then(response => {
-        console.log("STATUT API :", response.status);
-        return response.text();
+"https://script.google.com/macros/s/AKfycbzNFXwX-d2t3xT_VG9JykqGNel57AdeSZggrf9s_Wb7LLGIpGOU0OgKrJp_8yoVYkE/exec";
+
     })
     .then(data => {
         console.log("REPONSE API TEST :", data);
