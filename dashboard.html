@@ -423,7 +423,22 @@ function afficherRecherche() {
     }
 
 }
+let chargementDashboardEnCours = false;
+let chargementMoisEnCours = false;
+let dernierMoisCharge = "";
+
 function chargerDashboard() {
+
+    if (chargementDashboardEnCours) {
+
+        console.log(
+            "⏳ Dashboard déjà en cours de chargement"
+        );
+
+        return;
+    }
+
+    chargementDashboardEnCours = true;
 
     const date =
         document.getElementById("dateChoisie").value;
@@ -690,20 +705,25 @@ function chargerDashboard() {
 
         .catch(error => {
 
-            console.error(
-                "Erreur connexion :",
-                error
-            );
+    console.error(
+        "Erreur connexion :",
+        error
+    );
 
-        });
+})
+.finally(() => {
 
-}function chargerStatistiquesMois() {
+    chargementDashboardEnCours = false;
+
+});
+
+}
+function chargerStatistiquesMois() {
 
     const select =
         document.getElementById("moisStats");
 
     if (!select) {
-        console.error("Sélecteur mois introuvable");
         return;
     }
 
@@ -715,12 +735,32 @@ function chargerDashboard() {
         return;
     }
 
+    // Éviter de lancer deux fois exactement
+    // la même requête
+    if (
+        chargementMoisEnCours &&
+        dernierMoisCharge === mois
+    ) {
+        console.log(
+            "⏳ Chargement du mois déjà en cours :",
+            mois
+        );
+
+        return;
+    }
+
+    chargementMoisEnCours = true;
+    dernierMoisCharge = mois;
+
     const url =
         API_URL +
         "?action=mois&mois=" +
         encodeURIComponent(mois);
 
-    console.log("URL STATISTIQUES MOIS :", url);
+    console.log(
+        "URL STATISTIQUES MOIS :",
+        url
+    );
 
     fetch(url)
 
@@ -733,7 +773,8 @@ function chargerDashboard() {
 
             if (!response.ok) {
                 throw new Error(
-                    "Erreur HTTP " + response.status
+                    "Erreur HTTP " +
+                    response.status
                 );
             }
 
@@ -750,54 +791,51 @@ function chargerDashboard() {
 
             if (data.statut !== "ok") {
 
-                console.error(
-                    "Erreur API statistiques mois :",
-                    data
+                throw new Error(
+                    data.message ||
+                    "Erreur API statistiques mois"
                 );
 
-                return;
             }
 
-            // -----------------------------
+            // ========================================
             // TOTAL REPAS
-            // -----------------------------
+            // ========================================
 
             document.getElementById(
                 "totalRepasMois"
             ).textContent =
-                data.totalRepas || 0;
+                data.totalRepas ?? 0;
 
 
-            // -----------------------------
-            // MOYENNE
-            // -----------------------------
+            // ========================================
+            // MOYENNE / JOUR
+            // ========================================
 
             document.getElementById(
                 "moyenneMois"
             ).textContent =
-                data.moyenneJour || 0;
+                data.moyenneJour ?? 0;
 
 
-            // -----------------------------
+            // ========================================
             // NOMBRE DE JOURS
-            // -----------------------------
+            // ========================================
 
             document.getElementById(
                 "nombreJoursMois"
             ).textContent =
-                data.nombreJours || 0;
+                data.nombreJours ?? 0;
 
 
-            // -----------------------------
+            // ========================================
             // REPAS PAR JOUR
-            // -----------------------------
+            // ========================================
 
             const conteneur =
-                document.getElementById("joursMois");
-
-            if (!conteneur) {
-                return;
-            }
+                document.getElementById(
+                    "joursMois"
+                );
 
             conteneur.innerHTML = "";
 
@@ -805,20 +843,21 @@ function chargerDashboard() {
                 data.jours || [];
 
 
-            // Aucun repas
-
             if (jours.length === 0) {
 
-                conteneur.innerHTML =
-                    "<p>Aucun repas ce mois-ci.</p>";
+                conteneur.innerHTML = `
+                    <p>
+                        Aucun repas ce mois-ci.
+                    </p>
+                `;
 
                 return;
             }
 
 
-            // -----------------------------
+            // ========================================
             // TABLEAU
-            // -----------------------------
+            // ========================================
 
             const table =
                 document.createElement("table");
@@ -860,10 +899,12 @@ function chargerDashboard() {
                 const ligne =
                     document.createElement("tr");
 
+
                 ligne.innerHTML = `
                     <td>${dateFormatee}</td>
                     <td>${jour.repas}</td>
                 `;
+
 
                 tbody.appendChild(ligne);
 
@@ -883,19 +924,15 @@ function chargerDashboard() {
                 error
             );
 
-            const conteneur =
-                document.getElementById("joursMois");
+        })
 
-            if (conteneur) {
+        .finally(() => {
 
-                conteneur.innerHTML =
-                    "<p>Erreur de connexion aux statistiques.</p>";
-
-            }
+            chargementMoisEnCours = false;
 
         });
 
-}    
+}
 function chargerSelecteurMois() {
 
     const select =
@@ -994,6 +1031,8 @@ chargerSelecteurClasses();
 
 chargerSelecteurMois();
 
+chargerStatistiquesMois();
+
     document.getElementById("moisStats")
     .addEventListener(
         "change",
@@ -1004,10 +1043,6 @@ chargerSelecteurMois();
         }
     );
 
-setInterval(
-    chargerDashboard,
-    10000
-);
 
 
 
