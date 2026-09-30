@@ -453,12 +453,14 @@ async function chargerDashboard() {
 
 
         const url =
-            API_URL +
-            "?action=dashboard" +
-            "&date=" +
-            encodeURIComponent(date) +
-            "&classe=" +
-            encodeURIComponent(classeSelectionnee);
+    API_URL +
+    "?action=dashboard" +
+    "&date=" +
+    encodeURIComponent(date) +
+    "&classe=" +
+    encodeURIComponent(classeSelectionnee) +
+    "&cache=" +
+    Date.now();
 
 
         console.log(
