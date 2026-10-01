@@ -34,11 +34,12 @@ async function trouverCamera() {
 
     } else {
 
-        // Si aucune caméra arrière n'est identifiée,
-        // on utilise simplement la première caméra disponible
-        cameraId = cameras[0].id;
+    // Si le nom de la caméra ne permet pas
+    // d'identifier la caméra arrière,
+    // on essaie la dernière caméra disponible.
+    cameraId = cameras[cameras.length - 1].id;
 
-    }
+}
 
     console.log("Caméra utilisée :", cameraId);
 
